@@ -1,11 +1,16 @@
 import app from "configuration/firebase";
 import { Router } from "express";
+import { assoc, map, omit } from "ramda";
+import { authorize } from "routers/middlewares/authorize";
 
 const router = Router();
 
-router.get('/', (req, res) => {
+router.use(authorize);
+
+router.get('/', (_, res) => {
   return app.auth().listUsers().then((values) => {
-    return res.send(values);
+    const hidden = map(omit(['passwordHash', 'passwordSalt']), values.users);
+    return res.send(assoc('users', hidden)(values));
   })
 })
 

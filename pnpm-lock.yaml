@@ -4,9 +4,11 @@ specifiers:
   '@firebase/app-compat': ^0.1.21
   '@firebase/app-types': ^0.7.0
   '@types/express': ^4.17.13
+  '@types/ramda': ^0.28.9
   dotenv: ^16.0.0
   express: ^4.17.3
   firebase-admin: ^10.0.2
+  ramda: ^0.28.0
   ts-node-dev: ^1.1.8
   tsconfig-paths: ^3.14.1
   typescript: ^4.6.3
@@ -14,9 +16,11 @@ specifiers:
 dependencies:
   '@firebase/app-compat': 0.1.21
   '@firebase/app-types': 0.7.0
+  '@types/ramda': 0.28.9
   dotenv: 16.0.0
   express: 4.17.3
   firebase-admin: 10.0.2_b2c59dabb74e592c496f4266c968bb15
+  ramda: 0.28.0
   tsconfig-paths: 3.14.1
 
 devDependencies:
@@ -328,6 +332,12 @@ packages:
 
   /@types/qs/6.9.7:
     resolution: {integrity: sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==}
+
+  /@types/ramda/0.28.9:
+    resolution: {integrity: sha512-AP+3FY9EFb4tNrZvey20bxKdVKCIyBpDJu4vr69tW2BUI1/B1OGWxx/8c0YYxEaXNUYJDWOi/MtjsbMX51hEAg==}
+    dependencies:
+      ts-toolbelt: 6.15.5
+    dev: false
 
   /@types/range-parser/1.2.4:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
@@ -1456,6 +1466,10 @@ packages:
     engines: {node: '>=0.6'}
     dev: false
 
+  /ramda/0.28.0:
+    resolution: {integrity: sha512-9QnLuG/kPVgWvMQ4aODhsBUFKOUmnbUnsSXACv+NCQZcHbeb+v8Lodp8OVxtRULN1/xOyYLLaL6npE6dMq5QTA==}
+    dev: false
+
   /range-parser/1.2.1:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
     engines: {node: '>= 0.6'}
@@ -1743,6 +1757,10 @@ packages:
       typescript: 4.6.3
       yn: 3.1.1
     dev: true
+
+  /ts-toolbelt/6.15.5:
+    resolution: {integrity: sha512-FZIXf1ksVyLcfr7M317jbB67XFJhOO1YqdTcuGaq9q5jLUoTikukZ+98TPjKiP2jC5CgmYdWWYs0s2nLSU0/1A==}
+    dev: false
 
   /tsconfig-paths/3.14.1:
     resolution: {integrity: sha512-fxDhWnFSLt3VuTwtvJt5fpwxBHg5AdKWMsgcPOOIilyjymcYVZoCQF8fvFRezCNfblEXmi+PcM1eYHeOAgXCOQ==}

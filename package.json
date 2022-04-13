@@ -19,9 +19,11 @@
   "dependencies": {
     "@firebase/app-compat": "^0.1.21",
     "@firebase/app-types": "^0.7.0",
+    "@types/ramda": "^0.28.9",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "firebase-admin": "^10.0.2",
+    "ramda": "^0.28.0",
     "tsconfig-paths": "^3.14.1"
   }
 }
