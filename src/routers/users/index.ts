@@ -6,7 +6,7 @@ import authorizeElevated from '../middlewares/authorize-elevated';
 
 const router = Router();
 
-router.use(authorize).get('/', (_, res) => {
+router.use(authorize, authorizeElevated).get('/', (_, res) => {
   return app.auth().listUsers().then((values) => {
     const hidden = map(omit(['passwordHash', 'passwordSalt']), values.users);
     return res.send(assoc('users', hidden)(values));
