@@ -11,6 +11,7 @@ import {
 import emailService from 'services/email-service';
 import userService from 'services/user-service';
 import validationService from 'services/validation-service';
+import { foldR } from '../../utilities/fp-utils';
 
 const router = Router();
 
@@ -60,6 +61,14 @@ router.use(authorize, authorizeElevated).post('/invite', async (req, res) => {
     return res.status(500).send(emailResult.value.getSelf());
   }
   return res.send({ data: 'invitation sent' });
+});
+
+router.use(authorize, authorizeElevated).delete('/:id', async (req, res) => {
+  const deleteUserResult = await userService.deleteUser(req.params.id);
+  return foldR(deleteUserResult)(
+    () => res.send({ message: 'deleted' }),
+    (error) => res.send(500).send(error.getSelf()),
+  );
 });
 
 // TODO: to be removed
