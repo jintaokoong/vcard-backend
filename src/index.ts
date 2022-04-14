@@ -1,4 +1,5 @@
 import app from 'configuration/express';
+import 'configuration/nodemailer';
 import 'configuration/firebase';
 
 app.listen(process.env.PORT, () => {

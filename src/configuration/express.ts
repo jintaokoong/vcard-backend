@@ -10,7 +10,7 @@ app.use(
     origin: ["https://localhost:3000"],
   })
 );
-app.use(json())
+app.use(json());
 
 app.use("/", routers.rootRouter);
 app.use("/users", routers.userRouter);
