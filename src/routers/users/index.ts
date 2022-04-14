@@ -24,6 +24,7 @@ router.use(authorize, authorizeElevated).get('/', (_, res) => {
     });
 });
 
+// TODO: to be removed
 router.post('/', (req, res) => {
   const { body } = req;
   return app
@@ -61,10 +62,12 @@ router.use(authorize, authorizeElevated).post('/invite', async (req, res) => {
   return res.send({ data: 'invitation sent' });
 });
 
+// TODO: to be removed
 router.use(authorize, authorizeElevated).get('/elevate', (_, res) => {
   return res.send({ message: 'user authorized' });
 });
 
+// TODO: to be removed
 router.use(authorize).post('/elevate', (req, res) => {
   return app
     .auth()
