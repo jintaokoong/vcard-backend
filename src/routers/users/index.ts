@@ -53,6 +53,12 @@ router.use(authorize, authorizeElevated).post('/invite', async (req, res) => {
   if (createUserResult._tag === 'Left') {
     return res.status(400).send(createUserResult.value.getSelf());
   }
+  const setUserTypeResult = await userService.setUserType(
+    createUserResult.value.uid,
+  )(validationResult.value.type);
+  if (setUserTypeResult._tag === 'Left') {
+    return res.status(500).send(setUserTypeResult.value.getSelf());
+  }
   const emailResult = await emailService.sendInvitation(
     validationResult.value.email,
     pass,
