@@ -1,7 +1,10 @@
-export type VcardErrorType = 'persistence_error' | 'server_error';
+export type VcardErrorType =
+  | 'persistence_error'
+  | 'server_error'
+  | 'validation_error';
 
 export class VcardError extends Error {
-  constructor (public type: VcardErrorType, message?: string) {
+  constructor(public type: VcardErrorType, message?: string) {
     super(message);
   }
   public getSelf = () => {
@@ -9,5 +12,5 @@ export class VcardError extends Error {
       type: this.type,
       message: this.message,
     };
-  }
+  };
 }

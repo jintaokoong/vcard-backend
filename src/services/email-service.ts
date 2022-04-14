@@ -1,21 +1,37 @@
 import { get } from '../configuration/envvar';
 import { compose, send } from '../utilities/email-utils';
+import { tryCatchAsync } from '../utilities/fp-utils';
+import { defaultTo, prop } from 'ramda';
+import { VcardError } from '../interfaces/shared/vcard-error';
 
-const sendInvitation = (email: string, pass: string) => {
+const sendInvitation = async (email: string, pass: string) => {
   const origin = get('GMAIL');
   if (!origin) {
-    throw new Error('server environment variable not setup correctly');
+    return {
+      _tag: 'Left',
+      value: new VcardError('server_error', 'Server configuration error'),
+    };
   }
-  const contents = compose(origin,
+  const contents = compose(
+    origin,
     email,
     'Invitation to Vcard App',
-    `You have been invited to use vcard app, here is your temporary password ${pass}.`
-  )
-  return send(contents);
-}
+    `You have been invited to use vcard app, here is your temporary password ${pass}.`,
+  );
+  return tryCatchAsync(
+    () => send(contents),
+    (error) => {
+      const message = prop('message', error);
+      return new VcardError(
+        'server_error',
+        defaultTo('Something went wrong')(message),
+      );
+    },
+  );
+};
 
 const emailService = {
   sendInvitation,
-}
+};
 
 export default emailService;
