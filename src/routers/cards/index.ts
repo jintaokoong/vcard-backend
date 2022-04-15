@@ -13,14 +13,13 @@ const router = Router();
 
 router.use(authorize);
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   const user = compose(extractId, safeExtract)(req.headers.authorization!);
-  return VCardModel.find({ createdBy: user }).then(
-    pipe(
-      map((doc) => doc.toObject()),
-      (docs) => res.send(docs),
-    ),
-  );
+  const fetchResult = await cardService.findCards(user);
+  if (fetchResult._tag === 'Left') {
+    return res.status(500).send(fetchResult.value.getSelf());
+  }
+  return res.send({ data: fetchResult.value });
 });
 
 router.post('/', async (req, res) => {
@@ -48,6 +47,13 @@ router.post('/', async (req, res) => {
     return res.status(500).send(createResult.value.getSelf());
   }
   return res.send(createResult.value);
+});
+
+router.delete('/:id', (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  return res.send();
 });
 
 export default router;
