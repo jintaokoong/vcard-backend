@@ -49,10 +49,16 @@ router.post('/', async (req, res) => {
   return res.send(createResult.value);
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const {
     params: { id },
+    headers: { authorization },
   } = req;
+  const user = compose(extractId, safeExtract)(authorization!);
+  const deleteResult = await cardService.deleteCard(id, user);
+  if (deleteResult._tag === 'Left') {
+    return res.status(500).send(deleteResult.value.getSelf());
+  }
   return res.send();
 });
 

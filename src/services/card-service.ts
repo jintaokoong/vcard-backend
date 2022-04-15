@@ -1,6 +1,6 @@
 import { VcardError } from 'interfaces/shared/vcard-error';
 import { VCardModel } from 'models/vcard';
-import { andThen, identity, invoker, map, pipe, propOr } from 'ramda';
+import { always, andThen, identity, invoker, map, pipe, propOr } from 'ramda';
 import { tryCatchAsync } from 'utilities/fp-utils';
 import { CreateCardRequest } from 'validations/create-card-req';
 
@@ -21,7 +21,6 @@ const createCard = async (
   createRequest: CreateCardRequest,
   user: string | undefined,
 ) => {
-  console.log(user);
   const card = new VCardModel({ ...createRequest, createdBy: user });
   return tryCatchAsync(
     pipe(() => card.save(), andThen(invoker(0, 'toObject'))),
@@ -34,9 +33,23 @@ const createCard = async (
   );
 };
 
+const deleteCard = async (id: string, user: string | undefined) => {
+  return tryCatchAsync(
+    pipe(
+      () => VCardModel.deleteOne({ _id: id, createdBy: user }).exec(),
+      andThen(always(undefined)),
+    ),
+    pipe(
+      propOr('error deleting card', 'message'),
+      (message: string) => new VcardError('persistence_error', message),
+    ),
+  );
+};
+
 const cardService = {
   createCard,
   findCards,
+  deleteCard,
 };
 
 export default cardService;
