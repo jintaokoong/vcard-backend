@@ -13,6 +13,7 @@ const addressSchema = object().shape({
 export type Address = InferType<typeof addressSchema>;
 
 export const createCardReq = object().shape({
+  label: string().required(),
   firstName: string(),
   lastName: string(),
   contact: string(),
