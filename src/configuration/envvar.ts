@@ -7,5 +7,5 @@ export const get = <T = any>(key: string, defaultValue?: T) => {
 };
 
 export const getOr = <T = any>(key: string, defaultValue: T) => {
-  return process.env[key] ?? defaultValue;
+  return (process.env[key] as T | undefined) ?? defaultValue;
 };
