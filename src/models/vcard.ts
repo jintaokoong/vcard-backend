@@ -1,5 +1,5 @@
-import { prop, getModelForClass } from '@typegoose/typegoose';
-import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import { getModelForClass, prop } from '@typegoose/typegoose';
+import { Base } from '@typegoose/typegoose/lib/defaultClasses';
 
 export class Address {
   @prop()
@@ -17,7 +17,9 @@ export class Address {
 }
 
 export interface VCard extends Base {}
-export class VCard extends TimeStamps {
+export class VCard {
+  @prop({ required: true })
+  label!: string;
   @prop()
   firstName?: string;
   @prop()
@@ -26,8 +28,8 @@ export class VCard extends TimeStamps {
   contact?: string;
   @prop()
   email?: string;
-  @prop()
-  address?: Address | undefined;
+  @prop({ _id: false })
+  address?: Address;
   @prop()
   title?: string;
   @prop()
@@ -36,12 +38,18 @@ export class VCard extends TimeStamps {
   workContact?: string;
   @prop()
   workEmail?: string;
-  @prop()
-  workAddress?: Address | undefined;
+  @prop({ _id: false })
+  workAddress?: Address;
   @prop()
   notes?: string;
   @prop()
   createdBy?: string;
+  @prop()
+  createdAt!: number;
+  @prop()
+  updatedAt!: number;
 }
 
-export const VCardModel = getModelForClass(VCard);
+export const VCardModel = getModelForClass(VCard, {
+  schemaOptions: { timestamps: { currentTime: () => Date.now() } },
+});
