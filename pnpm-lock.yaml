@@ -24,6 +24,7 @@ specifiers:
   ts-node-dev: ^1.1.8
   tsconfig-paths: ^3.14.1
   typescript: ^4.6.3
+  vcard-creator: ^0.4.2
   yup: ^0.32.11
 
 dependencies:
@@ -45,6 +46,7 @@ dependencies:
   nodemailer: 6.7.3
   ramda: 0.28.0
   tsconfig-paths: 3.14.1
+  vcard-creator: 0.4.2
   yup: 0.32.11
 
 devDependencies:
@@ -2213,6 +2215,10 @@ packages:
   /vary/1.1.2:
     resolution: {integrity: sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=}
     engines: {node: '>= 0.8'}
+    dev: false
+
+  /vcard-creator/0.4.2:
+    resolution: {integrity: sha512-MnIxp/mNdlrYhRZgjZsYGVj17CgXEqQosb2/mYBcAvEu5gPH75U03gMsD33VnFZO2hVDLrnor1U8tqtN5rs54Q==}
     dev: false
 
   /webidl-conversions/3.0.1:

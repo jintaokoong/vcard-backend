@@ -8,8 +8,20 @@ import validationService from 'services/validation-service';
 import { extract, extractId, safeExtract } from 'utilities/jwt-utils';
 import { createCardReq, CreateCardRequest } from 'validations/create-card-req';
 import { paginationSchema } from '../../validations/listing-schema';
+import vcfUtils from '../../utilities/vcf-utils';
 
 const router = Router();
+
+router.get('/export/:id', async (req, res) => {
+  const fetchResult = await cardService.getCard(req.params.id);
+  if (fetchResult._tag === 'Left')
+    return res.status(500).send(fetchResult.value.getSelf());
+  if (fetchResult.value === null) return res.status(404);
+  const vcfText = vcfUtils.generateVcf(fetchResult.value);
+  res.attachment('contact-details.vcf');
+  res.type('text/vcard');
+  return res.send(vcfText);
+});
 
 router.use(authorize);
 
@@ -61,7 +73,6 @@ router.post('/', async (req, res) => {
   if (validationResult._tag === 'Left') {
     return res.status(400).send(validationResult.value.getSelf());
   }
-  console.log(validationResult.value);
 
   const createResult = await cardService.createCard(
     validationResult.value,

@@ -1,5 +1,5 @@
 import app from 'configuration/express';
-import { get, getOr } from 'configuration/envvar';
+import { getOr } from 'configuration/envvar';
 import 'configuration/nodemailer';
 import 'configuration/firebase';
 import mongoose from 'mongoose';

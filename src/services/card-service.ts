@@ -5,14 +5,17 @@ import {
   always,
   andThen,
   assoc,
+  complement,
   compose,
   defaultTo,
   identity,
   invoker,
+  isNil,
   map,
   pathOr,
   pipe,
   propOr,
+  when,
 } from 'ramda';
 import { tryCatchAsync } from 'utilities/fp-utils';
 import { CreateCardRequest } from 'validations/create-card-req';
@@ -110,12 +113,26 @@ const deleteCard = async (id: string, user: string | undefined) => {
   );
 };
 
+const getCard = async (id: string) => {
+  return tryCatchAsync(
+    pipe(
+      () => VCardModel.findOne({ _id: id }).then(identity),
+      andThen(when(complement(isNil), invoker(0, 'toObject'))),
+    ),
+    pipe(
+      propOr('error fetching card', 'message'),
+      (message: string) => new VcardError('server_error', message),
+    ),
+  );
+};
+
 const cardService = {
   listCards,
   getTotalPages,
   createCard,
   findCards,
   deleteCard,
+  getCard,
 };
 
 export default cardService;
