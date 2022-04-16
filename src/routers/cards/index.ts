@@ -31,18 +31,6 @@ router.get('/export/:id', async (req, res) => {
 });
 
 /**
- * GET Get all cards
- */
-router.use(authorize).get('/all', async (req, res) => {
-  const user = compose(extractId, safeExtract)(req.headers.authorization!);
-  const fetchResult = await cardService.findCards(user);
-  if (fetchResult._tag === 'Left') {
-    return res.status(500).send(fetchResult.value.getSelf());
-  }
-  return res.send({ data: fetchResult.value });
-});
-
-/**
  * GET Card :id
  */
 router.get('/:id', async (req, res) => {
