@@ -21,6 +21,7 @@ import { tryCatchAsync } from 'utilities/fp-utils';
 import { CreateCardRequest } from 'validations/create-card-req';
 import { ListingOptions } from '../interfaces/listings/listing-options';
 import paginationUtils from '../utilities/pagination-utils';
+import { UpdateCardRequest } from '../validations/update-card-req';
 
 const listCards = async (
   options: ListingOptions<never>,
@@ -126,6 +127,30 @@ const getCard = async (id: string) => {
   );
 };
 
+const updateCard = async (
+  id: string,
+  updateRequest: UpdateCardRequest,
+  user: string | undefined,
+) => {
+  return tryCatchAsync(
+    pipe(
+      () =>
+        VCardModel.findOneAndUpdate(
+          { _id: id, createdBy: user },
+          updateRequest,
+          { new: true },
+        ).then(identity),
+      andThen(invoker(0, 'toObject')),
+    ),
+    (error) => {
+      return new VcardError(
+        'persistence_error',
+        propOr('error updating model', 'message')(error),
+      );
+    },
+  );
+};
+
 const cardService = {
   listCards,
   getTotalPages,
@@ -133,6 +158,7 @@ const cardService = {
   findCards,
   deleteCard,
   getCard,
+  updateCard,
 };
 
 export default cardService;

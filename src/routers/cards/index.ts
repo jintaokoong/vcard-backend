@@ -9,6 +9,10 @@ import { extract, extractId, safeExtract } from 'utilities/jwt-utils';
 import { createCardReq, CreateCardRequest } from 'validations/create-card-req';
 import { paginationSchema } from '../../validations/listing-schema';
 import vcfUtils from '../../utilities/vcf-utils';
+import {
+  updateCardReq,
+  UpdateCardRequest,
+} from '../../validations/update-card-req';
 
 const router = Router();
 
@@ -24,6 +28,18 @@ router.get('/export/:id', async (req, res) => {
   res.attachment('contact-details.vcf');
   res.type('text/vcard');
   return res.send(vcfText);
+});
+
+/**
+ * GET Get all cards
+ */
+router.use(authorize).get('/all', async (req, res) => {
+  const user = compose(extractId, safeExtract)(req.headers.authorization!);
+  const fetchResult = await cardService.findCards(user);
+  if (fetchResult._tag === 'Left') {
+    return res.status(500).send(fetchResult.value.getSelf());
+  }
+  return res.send({ data: fetchResult.value });
 });
 
 /**
@@ -70,18 +86,6 @@ router.get('/', async (req, res) => {
 });
 
 /**
- * GET Get all cards
- */
-router.get('/all', async (req, res) => {
-  const user = compose(extractId, safeExtract)(req.headers.authorization!);
-  const fetchResult = await cardService.findCards(user);
-  if (fetchResult._tag === 'Left') {
-    return res.status(500).send(fetchResult.value.getSelf());
-  }
-  return res.send({ data: fetchResult.value });
-});
-
-/**
  * POST Create new Card
  */
 router.post('/', async (req, res) => {
@@ -122,6 +126,36 @@ router.delete('/:id', async (req, res) => {
     return res.status(500).send(deleteResult.value.getSelf());
   }
   return res.send();
+});
+
+/**
+ * PUT update card
+ */
+router.put('/:id', async (req, res) => {
+  const {
+    body,
+    params,
+    headers: { authorization },
+  } = req;
+  const user = extractId(extract(authorization!) as string);
+  const validationResult: Either<VcardError, UpdateCardRequest> =
+    await validationService.validate<typeof body, typeof updateCardReq>(
+      updateCardReq,
+    )(body);
+  if (validationResult._tag === 'Left') {
+    return res.status(400).send(validationResult.value.getSelf());
+  }
+
+  const updateResult = await cardService.updateCard(
+    params.id,
+    validationResult.value,
+    user,
+  );
+  if (updateResult._tag === 'Left') {
+    return res.status(500).send(updateResult.value.getSelf());
+  }
+
+  res.send(updateResult.value);
 });
 
 export default router;

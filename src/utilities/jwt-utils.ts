@@ -1,6 +1,6 @@
 import app from 'configuration/firebase';
 import jwt from 'jsonwebtoken';
-import { dec, pipe, prop } from 'ramda';
+import { pipe, prop, propOr } from 'ramda';
 
 export const extract = (authorization: string) =>
   !authorization.startsWith('Bearer')
@@ -15,7 +15,9 @@ export const verify = (token: string) => {
     .auth()
     .verifyIdToken(token)
     .then((value) => value)
-    .catch((error) => new Error('Decode error'));
+    .catch(
+      (error) => new Error(propOr('Unable to verify token', 'message')(error)),
+    );
 };
 
 export const extractId = (token: string) =>
