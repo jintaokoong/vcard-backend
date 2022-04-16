@@ -23,6 +23,15 @@ router.get('/export/:id', async (req, res) => {
   return res.send(vcfText);
 });
 
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  const fetchResult = await cardService.getCard(id);
+  if (fetchResult._tag === 'Left') {
+    return res.status(500).send(fetchResult.value.getSelf());
+  }
+  return res.send({ data: fetchResult.value });
+});
+
 router.use(authorize);
 
 router.get('/', async (req, res) => {

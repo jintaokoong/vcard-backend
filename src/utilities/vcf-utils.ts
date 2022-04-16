@@ -5,8 +5,8 @@ const generateVcf = (card: VCard) => {
   const vcard = new VC('vcard');
 
   vcard.addName(card.lastName, card.firstName);
-  card.email && vcard.addEmail(card.email);
-  card.contact && vcard.addPhoneNumber(card.contact);
+  card.email && vcard.addEmail(card.email, 'HOME');
+  card.contact && vcard.addPhoneNumber(card.contact, 'HOME');
   card.address &&
     vcard.addAddress(
       card.address.label,
@@ -16,6 +16,7 @@ const generateVcf = (card: VCard) => {
       card.address.state,
       card.address.postalCode,
       card.address.countryCode,
+      'HOME',
     );
 
   card.organization && vcard.addCompany(card.organization);
