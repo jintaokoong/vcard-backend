@@ -1,19 +1,45 @@
 import { Router } from 'express';
 import { Either } from 'interfaces/fp/either';
 import { VcardError } from 'interfaces/shared/vcard-error';
-import { VCardModel } from 'models/vcard';
-import { compose, map, pipe } from 'ramda';
+import { compose } from 'ramda';
 import { authorize } from 'routers/middlewares/authorize';
 import cardService from 'services/card-service';
 import validationService from 'services/validation-service';
 import { extract, extractId, safeExtract } from 'utilities/jwt-utils';
 import { createCardReq, CreateCardRequest } from 'validations/create-card-req';
+import { paginationSchema } from '../../validations/listing-schema';
 
 const router = Router();
 
 router.use(authorize);
 
 router.get('/', async (req, res) => {
+  const pagination = { page: req.query.page, pageSize: req.query.pageSize };
+  const paginationValidationResult = await validationService.validate(
+    paginationSchema,
+  )(pagination);
+  if (paginationValidationResult._tag === 'Left') {
+    return res.status(400).send(paginationValidationResult.value.getSelf());
+  }
+  const user = compose(extractId, safeExtract)(req.headers.authorization!);
+  const fetchResult = await cardService.listCards(
+    { pagination: paginationValidationResult.value },
+    user,
+  );
+  if (fetchResult._tag === 'Left') {
+    return res.status(500).send(fetchResult.value.getSelf());
+  }
+  const totalPagesResult = await cardService.getTotalPages(
+    { pagination: paginationValidationResult.value },
+    user,
+  );
+  if (totalPagesResult._tag === 'Left') {
+    return res.status(500).send(totalPagesResult.value.getSelf());
+  }
+  return res.send({ data: fetchResult.value, ...totalPagesResult.value });
+});
+
+router.get('/all', async (req, res) => {
   const user = compose(extractId, safeExtract)(req.headers.authorization!);
   const fetchResult = await cardService.findCards(user);
   if (fetchResult._tag === 'Left') {
@@ -29,11 +55,9 @@ router.post('/', async (req, res) => {
   } = req;
   const user = extractId(extract(authorization!) as string);
   const validationResult: Either<VcardError, CreateCardRequest> =
-    await validationService.validate<
-      typeof body,
-      typeof createCardReq,
-      CreateCardRequest
-    >(createCardReq)(body);
+    await validationService.validate<typeof body, typeof createCardReq>(
+      createCardReq,
+    )(body);
   if (validationResult._tag === 'Left') {
     return res.status(400).send(validationResult.value.getSelf());
   }

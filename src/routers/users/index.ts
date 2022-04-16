@@ -40,8 +40,7 @@ router.use(authorize, authorizeElevated).post('/invite', async (req, res) => {
   const { body } = req;
   const validationResult = await validationService.validate<
     typeof body,
-    typeof inviteUserReqSchema,
-    InviteUserReq
+    typeof inviteUserReqSchema
   >(inviteUserReqSchema)(body);
   if (validationResult._tag === 'Left') {
     return res.status(400).send(validationResult.value.getSelf());
