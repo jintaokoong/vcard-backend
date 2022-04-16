@@ -12,6 +12,9 @@ import vcfUtils from '../../utilities/vcf-utils';
 
 const router = Router();
 
+/**
+ * Export VCF
+ */
 router.get('/export/:id', async (req, res) => {
   const fetchResult = await cardService.getCard(req.params.id);
   if (fetchResult._tag === 'Left')
@@ -23,6 +26,9 @@ router.get('/export/:id', async (req, res) => {
   return res.send(vcfText);
 });
 
+/**
+ * GET Card :id
+ */
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const fetchResult = await cardService.getCard(id);
@@ -34,6 +40,9 @@ router.get('/:id', async (req, res) => {
 
 router.use(authorize);
 
+/**
+ * GET List Cards
+ */
 router.get('/', async (req, res) => {
   const pagination = { page: req.query.page, pageSize: req.query.pageSize };
   const paginationValidationResult = await validationService.validate(
@@ -60,6 +69,9 @@ router.get('/', async (req, res) => {
   return res.send({ data: fetchResult.value, ...totalPagesResult.value });
 });
 
+/**
+ * GET Get all cards
+ */
 router.get('/all', async (req, res) => {
   const user = compose(extractId, safeExtract)(req.headers.authorization!);
   const fetchResult = await cardService.findCards(user);
@@ -69,6 +81,9 @@ router.get('/all', async (req, res) => {
   return res.send({ data: fetchResult.value });
 });
 
+/**
+ * POST Create new Card
+ */
 router.post('/', async (req, res) => {
   const {
     body,
@@ -93,6 +108,9 @@ router.post('/', async (req, res) => {
   return res.send(createResult.value);
 });
 
+/**
+ * DELETE delete card
+ */
 router.delete('/:id', async (req, res) => {
   const {
     params: { id },
