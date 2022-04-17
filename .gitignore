@@ -4,6 +4,8 @@ service-account-file.json
 
 **/firebase.http
 
+dist.zip
+
 # Logs
 logs
 *.log
