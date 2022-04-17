@@ -16,7 +16,9 @@ const sendInvitation = async (email: string, pass: string) => {
     origin,
     email,
     'Invitation to Vcard App',
-    `You have been invited to use vcard app, here is your temporary password ${pass}.`,
+    `You have been invited to use vcard app, here is your temporary password ${pass}. Click <a href='${get(
+      'FRONTEND_URL',
+    )}'>here</a> to start creating your first card.`,
   );
   return tryCatchAsync(
     () => send(contents),
