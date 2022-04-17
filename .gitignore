@@ -1,5 +1,6 @@
 # Customs
-.idea
+.idea/
+**/*-log.http
 service-account-file.json
 
 **/firebase.http
