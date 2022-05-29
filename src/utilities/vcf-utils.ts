@@ -1,5 +1,12 @@
+import { isEmpty, values } from 'ramda';
 import VC from 'vcard-creator';
 import { VCard } from '../models/vcard';
+
+const any =
+  <T>(pred: (item: T) => boolean) =>
+  (items: T[]): boolean => {
+    return items.find(pred) !== undefined;
+  };
 
 const generateVcf = (card: VCard) => {
   const vcard = new VC('vcard');
@@ -7,7 +14,13 @@ const generateVcf = (card: VCard) => {
   vcard.addName(card.lastName, card.firstName);
   card.email && vcard.addEmail(card.email);
   card.contact && vcard.addPhoneNumber(card.contact, 'CELL');
+
+  const hasValue = any<string | undefined>(
+    (item) => Boolean(item) && !isEmpty(item),
+  );
+
   card.address &&
+    hasValue(values(card.address)) &&
     vcard.addAddress(
       card.address.label,
       undefined,
@@ -24,6 +37,7 @@ const generateVcf = (card: VCard) => {
   card.workEmail && vcard.addEmail(card.workEmail, 'WORK');
   card.workContact && vcard.addPhoneNumber(card.workContact, 'PREF;WORK');
   card.workAddress &&
+    hasValue(values(card.workAddress)) &&
     vcard.addAddress(
       card.workAddress.label,
       undefined,
