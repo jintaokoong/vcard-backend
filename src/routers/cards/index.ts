@@ -7,8 +7,8 @@ import cardService from 'services/card-service';
 import validationService from 'services/validation-service';
 import { extract, extractId, safeExtract } from 'utilities/jwt-utils';
 import { createCardReq, CreateCardRequest } from 'validations/create-card-req';
-import { paginationSchema } from '../../validations/listing-schema';
 import vcfUtils from '../../utilities/vcf-utils';
+import { paginationSchema } from '../../validations/listing-schema';
 import {
   updateCardReq,
   UpdateCardRequest,
@@ -38,6 +38,11 @@ router.get('/:id', async (req, res) => {
   const fetchResult = await cardService.getCard(id);
   if (fetchResult._tag === 'Left') {
     return res.status(500).send(fetchResult.value.getSelf());
+  }
+  if (fetchResult.value == null) {
+    return res
+      .status(404)
+      .send(new VcardError('server_error', 'not found.').getSelf());
   }
   return res.send({ data: fetchResult.value });
 });
