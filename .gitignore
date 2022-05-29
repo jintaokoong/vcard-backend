@@ -3,7 +3,7 @@
 **/*-log.http
 service-account-file.json
 
-**/firebase.http
+**/*.http
 
 dist.zip
 out.txt
