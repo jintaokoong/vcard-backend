@@ -6,6 +6,7 @@ service-account-file.json
 **/firebase.http
 
 dist.zip
+out.txt
 
 # Logs
 logs

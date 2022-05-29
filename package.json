@@ -2,12 +2,13 @@
   "name": "vcard-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "clean": "rimraf dist/",
     "build": "npm run clean && tsc",
     "typecheck": "tsc --noEmit",
     "secrets": "copyfiles .env service-account-file.json tsconfig.json package.json pnpm-lock.yaml dist",
+    "start": "node dist/index.js",
     "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
     "bootstrap": "npm run build && npm run secrets",
     "test": "echo \"Error: no test specified\" && exit 1"
